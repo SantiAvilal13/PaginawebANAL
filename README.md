@@ -95,7 +95,8 @@ PaginawebANAL/
 
 ## Autor
 
-**Santiago Avila** - Estudiante de Análisis de Algoritmos
+**Santiago Avila** - Estudiante de Ingenieria de sistemas
+**David Piñeros** - Estudiante de Ingenieria de sistemas
 
 ---
 
