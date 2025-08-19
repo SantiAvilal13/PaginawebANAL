@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Algoritmos - Santiago Avila y David Piñeros</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <nav role="navigation" aria-label="Navegación principal">
+            <div class="nav-container">
+                <h1 class="logo">Análisis de Algoritmos</h1>
+                <button id="homeBtn" class="nav-btn" aria-label="Ir a la página de inicio">Inicio</button>
+            </div>
+        </nav>
+    </header>
+
+    <main id="mainContent" role="main">
+        <!-- Home Page -->
+        <div id="homePage" class="page active">
+            <div class="hero-section">
+                <h1 class="welcome-title">Bienvenido a la página de los problemas de Santiago Avila y David Piñeros</h1>
+                <p class="hero-subtitle">Explora y compara algoritmos de fuerza bruta vs eficientes</p>
+            </div>
+            
+            <div class="problems-grid" role="grid" aria-label="Lista de problemas algorítmicos">
+                <div class="problem-card" data-problem="tsp" role="gridcell">
+                    <h3>TSP - Viajante de Comercio</h3>
+                    <p>Encuentra la ruta más corta que visita todas las ciudades</p>
+                    <button class="open-btn" aria-label="Abrir problema del Viajante de Comercio">Abrir</button>
+                </div>
+                
+                <div class="problem-card" data-problem="nqueens" role="gridcell">
+                    <h3>N-Reinas</h3>
+                    <p>Coloca N reinas en un tablero sin que se ataquen</p>
+                    <button class="open-btn" aria-label="Abrir problema de N-Reinas">Abrir</button>
+                </div>
+                
+                <div class="problem-card" data-problem="hash" role="gridcell">
+                    <h3>Colisión de Hash</h3>
+                    <p>Encuentra dos entradas con el mismo valor hash</p>
+                    <button class="open-btn" aria-label="Abrir problema de Colisión de Hash">Abrir</button>
+                </div>
+                
+                <div class="problem-card" data-problem="matrix" role="gridcell">
+                    <h3>Multiplicación de Matrices</h3>
+                    <p>Calcula el producto de dos matrices</p>
+                    <button class="open-btn" aria-label="Abrir problema de Multiplicación de Matrices">Abrir</button>
+                </div>
+                
+                <div class="problem-card" data-problem="sudoku">
+                    <h3>Sudoku 9×9</h3>
+                    <p>Completa la cuadrícula con dígitos del 1 al 9</p>
+                    <button class="open-btn">Abrir</button>
+                </div>
+                
+                <div class="problem-card" data-problem="cryptogram">
+                    <h3>Criptograma</h3>
+                    <p>Resuelve SEND + MORE = MONEY</p>
+                    <button class="open-btn">Abrir</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TSP Page -->
+        <div id="tspPage" class="page">
+            <div class="problem-header">
+                <h2>TSP - Viajante de Comercio</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Información del Problema</h3>
+                <div class="info-content">
+                    <p><strong>Origen:</strong> Formulado en el siglo XIX y popularizado por matemáticos como Karl Menger; ampliamente estudiado en investigación operativa en el s. XX.</p>
+                    <p><strong>Objetivo:</strong> Encontrar la ruta más corta que visita todas las ciudades exactamente una vez y regresa a la de origen.</p>
+                    <p><strong>Fuerza bruta (cómo se aborda):</strong> Fijar una ciudad origen y evaluar todas las permutaciones de las restantes; calcular la distancia total y tomar la mínima.</p>
+                    <p><strong>Ejemplo:</strong> coords=[(0,0),(1,0),(1,1),(0,1)] ⇒ ruta óptima (0,1,2,3,0), longitud 4.0.</p>
+                    <p><strong>Complejidad:</strong> Tiempo O(n!), espacio O(n).</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>Controles y Entrada</h3>
+                <div class="input-group">
+                    <label for="tspInput">Coordenadas de ciudades (formato: x1,y1;x2,y2;...):</label>
+                    <textarea id="tspInput" rows="3" placeholder="0,0;1,0;1,1;0,1;0.5,0.5"></textarea>
+                </div>
+                <div class="button-group">
+                    <button id="tspBruteBtn" class="algorithm-btn brute">Ejecutar Fuerza Bruta</button>
+                    <button id="tspEfficientBtn" class="algorithm-btn efficient">Ejecutar Eficiente</button>
+                    <button id="tspCompareBtn" class="compare-btn">Comparar</button>
+                    <div id="tspStatus" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Resultados y Métricas</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>Fuerza Bruta</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="tspBruteTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Distancias:</span>
+                            <span id="tspBruteNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="tspBruteResult">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Eficiente</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="tspEfficientTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Distancias:</span>
+                            <span id="tspEfficientNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="tspEfficientResult">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>Visualización del Problema</h4>
+                    <canvas id="tspVisualization" width="400" height="300" aria-label="Visualización de la solución del problema del Viajante de Comercio"></canvas>
+                    <h4>Comparación de Rendimiento</h4>
+                    <div class="charts-container">
+                        <div class="chart-item">
+                            <h5>Tiempo de Ejecución</h5>
+                            <canvas id="tspChartTime" width="350" height="250" aria-label="Gráfico comparativo de tiempos de ejecución para TSP"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h5>Nodos Explorados</h5>
+                            <canvas id="tspChartNodes" width="350" height="250" aria-label="Gráfico comparativo de nodos explorados para TSP"></canvas>
+                        </div>
+                    </div>
+                    <div id="tspComment" class="comparison-comment"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h3>Código de Implementación</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="tsp-brute">Fuerza Bruta</button>
+                    <button class="code-tab" data-tab="tsp-efficient">Eficiente</button>
+                </div>
+                <div class="code-content">
+                    <div id="tsp-brute" class="code-block active">
+                        <div class="code-header">
+                            <span>TSP - Fuerza Bruta</span>
+                            <button class="copy-btn" onclick="copyCode('tsp-brute-code')">Copiar</button>
+                        </div>
+                        <pre><code id="tsp-brute-code">function tspBruteForce(coords) {
+    let distanceCalculations = 0;
+    let bestDistance = Infinity;
+    let bestPath = [];
+    
+    function distance(p1, p2) {
+        distanceCalculations++;
+        return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2);
+    }
+    
+    function permute(arr, start = 0) {
+        // Check for cancellation every 1000 distance calculations
+        if (distanceCalculations % 1000 === 0) {
+            checkCancellation(distanceCalculations, 'tsp');
+        }
+        
+        if (start === arr.length - 1) {
+            // Calculate tour distance: 0 -> arr[0] -> arr[1] -> ... -> arr[last] -> 0
+            let totalDistance = distance(coords[0], coords[arr[0]]); // 0 to first city
+            for (let i = 0; i < arr.length - 1; i++) {
+                totalDistance += distance(coords[arr[i]], coords[arr[i + 1]]);
+            }
+            totalDistance += distance(coords[arr[arr.length - 1]], coords[0]); // last city back to 0
+            
+            if (totalDistance < bestDistance) {
+                bestDistance = totalDistance;
+                bestPath = [...arr];
+            }
+            return;
+        }
+        
+        for (let i = start; i < arr.length; i++) {
+            [arr[start], arr[i]] = [arr[i], arr[start]];
+            permute(arr, start + 1);
+            [arr[start], arr[i]] = [arr[i], arr[start]];
+        }
+    }
+    
+    const cities = Array.from({length: coords.length - 1}, (_, i) => i + 1); // Cities 1 to n-1
+    permute(cities); // Permute cities excluding 0
+    
+    return {
+        path: [0, ...bestPath, 0], // Closed tour
+        distance: bestDistance,
+        nodes: distanceCalculations
+    };
+}</code></pre>
+                    </div>
+                    <div id="tsp-efficient" class="code-block">
+                        <div class="code-header">
+                            <span>TSP - Vecino Más Cercano</span>
+                            <button class="copy-btn" onclick="copyCode('tsp-efficient-code')">Copiar</button>
+                        </div>
+                        <pre><code id="tsp-efficient-code">function tspNearestNeighbor(coords) {
+    let distanceCalculations = 0;
+    
+    function distance(p1, p2) {
+        distanceCalculations++;
+        return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2);
+    }
+    
+    // Phase 1: Nearest Neighbor construction
+    const visited = new Array(coords.length).fill(false);
+    const path = [0];
+    visited[0] = true;
+    let totalDistance = 0;
+    
+    let current = 0;
+    for (let i = 1; i < coords.length; i++) {
+        let nearest = -1;
+        let nearestDistance = Infinity;
+        
+        for (let j = 0; j < coords.length; j++) {
+            if (!visited[j]) {
+                const dist = distance(coords[current], coords[j]);
+                if (dist < nearestDistance) {
+                    nearestDistance = dist;
+                    nearest = j;
+                }
+            }
+        }
+        
+        visited[nearest] = true;
+        path.push(nearest);
+        totalDistance += nearestDistance;
+        current = nearest;
+    }
+    
+    // Return to start
+    totalDistance += distance(coords[current], coords[0]);
+    path.push(0); // Close the tour
+    
+    // Phase 2: 2-opt improvement
+    let improved = true;
+    let iterations = 0;
+    const maxIterations = 100;
+    
+    while (improved && iterations < maxIterations) {
+        improved = false;
+        iterations++;
+        
+        for (let i = 1; i < path.length - 2; i++) {
+            for (let j = i + 1; j < path.length - 1; j++) {
+                const currentDist = distance(coords[path[i-1]], coords[path[i]]) + 
+                                  distance(coords[path[j]], coords[path[j+1]]);
+                
+                const newDist = distance(coords[path[i-1]], coords[path[j]]) + 
+                              distance(coords[path[i]], coords[path[j+1]]);
+                
+                if (newDist < currentDist) {
+                    // Perform 2-opt swap
+                    const newPath = [...path];
+                    for (let k = 0; k <= j - i; k++) {
+                        newPath[i + k] = path[j - k];
+                    }
+                    path.splice(0, path.length, ...newPath);
+                    
+                    // Recalculate total distance
+                    totalDistance = 0;
+                    for (let k = 0; k < path.length - 1; k++) {
+                        totalDistance += distance(coords[path[k]], coords[path[k + 1]]);
+                    }
+                    
+                    improved = true;
+                    break;
+                }
+            }
+            if (improved) break;
+        }
+    }
+    
+    return {
+        path: path,
+        distance: totalDistance,
+        nodes: distanceCalculations
+    };
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- N-Queens Page -->
+        <div id="nqueensPage" class="page">
+            <div class="problem-header">
+                <h2>N-Reinas</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Información del Problema</h3>
+                <div class="info-content">
+                    <p><strong>Origen:</strong> Propuesto por Max Bezzel en 1848 como el problema de las 8 reinas; generalizado a N.</p>
+                    <p><strong>Objetivo:</strong> Colocar N reinas en un tablero N×N sin que se ataquen (filas, columnas, diagonales).</p>
+                    <p><strong>Fuerza bruta (cómo se aborda):</strong> Backtracking colocando una reina por fila y verificando conflictos antes de avanzar.</p>
+                    <p><strong>Ejemplo:</strong> N=4 ⇒ [1,3,0,2] y [2,0,3,1].</p>
+                    <p><strong>Complejidad:</strong> Exponencial en tiempo; espacio O(N).</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>Controles y Entrada</h3>
+                <div class="input-group">
+                    <label for="nqueensInput">Tamaño del tablero (N):</label>
+                    <input type="number" id="nqueensInput" value="8" min="4" max="12">
+                    <button id="nqueens4Btn" class="quick-btn">N=4</button>
+                </div>
+                <div class="input-group">
+                    <label for="nqueensStrategy">Orden de columnas:</label>
+                    <select id="nqueensStrategy">
+                        <option value="natural">Natural (1,2,3...)</option>
+                        <option value="centered">Centradas primero (heurística)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="nqueensSearchType">Tipo de búsqueda:</label>
+                    <select id="nqueensSearchType">
+                        <option value="dfs">DFS (Depth-First Search)</option>
+                        <option value="bfs">BFS (Breadth-First Search)</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="nqueensBruteBtn" class="algorithm-btn brute">Ejecutar Fuerza Bruta</button>
+                    <button id="nqueensEfficientBtn" class="algorithm-btn efficient">Ejecutar Eficiente</button>
+                    <button id="nqueensCompareBtn" class="compare-btn">Comparar</button>
+                    <div id="nqueensStatus" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Resultados y Métricas</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>Fuerza Bruta</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="nqueensBruteTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Nodos:</span>
+                            <span id="nqueensBruteNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="nqueensBruteResult">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Eficiente</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="nqueensEfficientTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Nodos:</span>
+                            <span id="nqueensEfficientNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="nqueensEfficientResult">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="visualization-section">
+                    <h4>Visualización del Tablero</h4>
+                    <canvas id="nqueensBoard" width="400" height="400" aria-label="Tablero de ajedrez mostrando la solución del problema de N-Reinas"></canvas>
+                    <div class="board-controls">
+                        <button id="nextSolutionBtn">Siguiente Solución</button>
+                        <span id="solutionCounter">Solución 1 de 1</span>
+                    </div>
+                    <div id="nqueensCoordinates" class="coordinates"></div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>Comparativa Visual</h4>
+                    <div class="charts-container">
+                        <div class="chart-item">
+                            <h5>Tiempo de Ejecución</h5>
+                            <canvas id="nqueensChartTime" width="350" height="250" aria-label="Gráfico comparativo de tiempos de ejecución para N-Reinas"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h5>Nodos Explorados</h5>
+                            <canvas id="nqueensChartNodes" width="350" height="250" aria-label="Gráfico comparativo de nodos explorados para N-Reinas"></canvas>
+                        </div>
+                    </div>
+                    <div id="nqueensComment" class="comparison-comment"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h3>Código de Implementación</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="nqueens-brute">Fuerza Bruta</button>
+                    <button class="code-tab" data-tab="nqueens-efficient">Eficiente</button>
+                </div>
+                <div class="code-content">
+                    <div id="nqueens-brute" class="code-block active">
+                        <div class="code-header">
+                            <span>N-Queens - Fuerza Bruta</span>
+                            <button class="copy-btn" onclick="copyCode('nqueens-brute-code')">Copiar</button>
+                        </div>
+                        <pre><code id="nqueens-brute-code">function nqueensBruteForce(n, strategy, searchType = 'dfs') {
+    let nodes = 0;
+    const solutions = [];
+    
+    function isValid(board, row, col) {
+        // Check column
+        for (let i = 0; i < row; i++) {
+            if (board[i] === col) return false;
+        }
+        
+        // Check diagonals
+        for (let i = 0; i < row; i++) {
+            if (Math.abs(board[i] - col) === Math.abs(i - row)) return false;
+        }
+        
+        return true;
+    }
+    
+    function getColumnOrder(n, strategy) {
+        if (strategy === 'centered') {
+            const order = [];
+            const center = Math.floor(n / 2);
+            order.push(center);
+            for (let i = 1; i <= center; i++) {
+                if (center + i < n) order.push(center + i);
+                if (center - i >= 0) order.push(center - i);
+            }
+            return order;
+        }
+        return Array.from({length: n}, (_, i) => i);
+    }
+    
+    function solve(board, row) {
+        nodes++;
+        
+        // Check for cancellation every 1000 nodes
+        if (nodes % 1000 === 0) {
+            checkCancellation(nodes, 'nqueens');
+        }
+        
+        if (row === n) {
+            solutions.push([...board]);
+            return;
+        }
+        
+        const columnOrder = getColumnOrder(n, strategy);
+        for (const col of columnOrder) {
+            if (isValid(board, row, col)) {
+                board[row] = col;
+                solve(board, row + 1);
+            }
+        }
+    }
+    
+    const board = new Array(n).fill(-1);
+    solve(board, 0);
+    
+    return {
+        solutions: solutions,
+        nodes: nodes
+    };
+}</code></pre>
+                    </div>
+                    <div id="nqueens-efficient" class="code-block">
+                        <div class="code-header">
+                            <span>N-Queens - Eficiente</span>
+                            <button class="copy-btn" onclick="copyCode('nqueens-efficient-code')">Copiar</button>
+                        </div>
+                        <pre><code id="nqueens-efficient-code">function nqueensEfficient(n, strategy, searchType = 'dfs') {
+    let nodes = 0;
+    const solutions = [];
+    
+    // Use sets for efficient pruning
+    const cols = new Set();
+    const diag1 = new Set(); // row - col
+    const diag2 = new Set(); // row + col
+    
+    function getColumnOrder(n, strategy) {
+        if (strategy === 'centered') {
+            // Try center columns first, then work outward
+            const order = [];
+            const center = Math.floor(n / 2);
+            order.push(center);
+            for (let i = 1; i <= center; i++) {
+                if (center + i < n) order.push(center + i);
+                if (center - i >= 0) order.push(center - i);
+            }
+            return order;
+        }
+        // Natural order
+        return Array.from({length: n}, (_, i) => i);
+    }
+    
+    function solve(board, row) {
+        nodes++;
+        
+        // Check for cancellation every 1000 nodes
+        if (nodes % 1000 === 0) {
+            checkCancellation(nodes, 'nqueens');
+        }
+        
+        if (row === n) {
+            solutions.push([...board]);
+            return;
+        }
+        
+        const columnOrder = getColumnOrder(n, strategy);
+        for (const col of columnOrder) {
+            const d1 = row - col;
+            const d2 = row + col;
+            
+            if (!cols.has(col) && !diag1.has(d1) && !diag2.has(d2)) {
+                board[row] = col;
+                cols.add(col);
+                diag1.add(d1);
+                diag2.add(d2);
+                
+                solve(board, row + 1);
+                
+                // Backtrack
+                cols.delete(col);
+                diag1.delete(d1);
+                diag2.delete(d2);
+            }
+        }
+    }
+    
+    const board = new Array(n).fill(-1);
+    solve(board, 0);
+    
+    return {
+        solutions: solutions,
+        nodes: nodes
+    };
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hash Collision Page -->
+        <div id="hashPage" class="page">
+            <div class="problem-header">
+                <h2>Colisión de Hash</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Información del Problema</h3>
+                <div class="info-content">
+                    <p><strong>Origen:</strong> Teoría de funciones hash en criptografía y EDD, desde mediados del siglo XX.</p>
+                    <p><strong>Objetivo:</strong> Encontrar dos entradas distintas con el mismo hash.</p>
+                    <p><strong>Fuerza bruta (cómo se aborda):</strong> Probar entradas secuenciales y guardar hashes hasta detectar el primer choque.</p>
+                    <p><strong>Ejemplo:</strong> límite=50, hash(x)=x mod 10 ⇒ colisión 7 y 17.</p>
+                    <p><strong>Complejidad:</strong> Tiempo O(k), espacio O(k) en el enfoque secuencial guardando vistos.</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>Controles y Entrada</h3>
+                <div class="input-group">
+                    <label for="hashModulus">Módulo (m):</label>
+                    <input type="number" id="hashModulus" value="97" min="2">
+                </div>
+                <div class="input-group">
+                    <label for="hashLimit">Límite de intentos:</label>
+                    <input type="number" id="hashLimit" value="200" min="1">
+                </div>
+                <div class="button-group">
+                    <button id="hashBruteBtn" class="algorithm-btn brute">Ejecutar Fuerza Bruta</button>
+                    <button id="hashEfficientBtn" class="algorithm-btn efficient">Ejecutar Eficiente</button>
+                    <button id="hashCompareBtn" class="compare-btn">Comparar</button>
+                    <div id="hashStatus" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Resultados y Métricas</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>Fuerza Bruta</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="hashBruteTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Intentos:</span>
+                            <span id="hashBruteNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="hashBruteResult">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Eficiente</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="hashEfficientTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Intentos:</span>
+                            <span id="hashEfficientNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="hashEfficientResult">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>Visualización de la Tabla Hash</h4>
+                    <canvas id="hashVisualization" width="400" height="300" aria-label="Visualización de la tabla hash y colisiones encontradas"></canvas>
+                    <h4>Comparación de Rendimiento</h4>
+                    <div class="charts-container">
+                        <div class="chart-item">
+                            <h5>Tiempo de Ejecución</h5>
+                            <canvas id="hashChartTime" width="350" height="250" aria-label="Gráfico comparativo de tiempos de ejecución para Hash"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h5>Intentos Realizados</h5>
+                            <canvas id="hashChartNodes" width="350" height="250" aria-label="Gráfico comparativo de intentos realizados para Hash"></canvas>
+                        </div>
+                    </div>
+                    <div id="hashComment" class="comparison-comment"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h3>Código de Implementación</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="hash-brute">Fuerza Bruta</button>
+                    <button class="code-tab" data-tab="hash-efficient">Eficiente</button>
+                </div>
+                <div class="code-content">
+                    <div id="hash-brute" class="code-block active">
+                        <div class="code-header">
+                            <span>Hash - Fuerza Bruta (Secuencial)</span>
+                            <button class="copy-btn" onclick="copyCode('hash-brute-code')">Copiar</button>
+                        </div>
+                        <pre><code id="hash-brute-code">function hashBruteForce(m, limit) {
+    const seen = new Map();
+    let attempts = 0;
+    
+    for (let x = 0; x < limit; x++) {
+        attempts++;
+        const hash = x % m;
+        
+        if (seen.has(hash)) {
+            return {
+                collision: { x: seen.get(hash), y: x, hash: hash },
+                attempts: attempts
+            };
+        }
+        
+        seen.set(hash, x);
+    }
+    
+    return { collision: null, attempts: attempts };
+}</code></pre>
+                    </div>
+                    <div id="hash-efficient" class="code-block">
+                        <div class="code-header">
+                            <span>Hash - Eficiente (Aleatorio)</span>
+                            <button class="copy-btn" onclick="copyCode('hash-efficient-code')">Copiar</button>
+                        </div>
+                        <pre><code id="hash-efficient-code">function hashEfficient(m, limit) {
+    const hashToValue = new Map();
+    let attempts = 0;
+    
+    // Use √m range for better collision probability (birthday paradox)
+    const range = Math.max(Math.ceil(Math.sqrt(m)), m);
+    
+    while (attempts < limit) {
+        attempts++;
+        const x = Math.floor(Math.random() * range);
+        const hash = x % m;
+        
+        if (hashToValue.has(hash)) {
+            const originalValue = hashToValue.get(hash);
+            return {
+                collision: { x: originalValue, y: x, hash: hash },
+                attempts: attempts
+            };
+        }
+        
+        hashToValue.set(hash, x);
+    }
+    
+    return { collision: null, attempts: attempts };
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matrix Multiplication Page -->
+        <div id="matrixPage" class="page">
+            <div class="problem-header">
+                <h2>Multiplicación de Matrices</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Información del Problema</h3>
+                <div class="info-content">
+                    <p><strong>Origen:</strong> Método clásico formalizado en el álgebra lineal del s. XIX.</p>
+                    <p><strong>Objetivo:</strong> Calcular C=A·B.</p>
+                    <p><strong>Fuerza bruta (cómo se aborda):</strong> Triple bucle para cada celda de C, acumulando productos A[i,k]·B[k,j].</p>
+                    <p><strong>Ejemplo:</strong> A=[[1,2],[3,4]], B=[[2,0],[1,2]] ⇒ C=[[4,4],[10,8]].</p>
+                    <p><strong>Complejidad:</strong> Tiempo O(n³), espacio O(1) extra.</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>Controles y Entrada</h3>
+                <div class="input-group">
+                    <label for="matrixA">Matriz A (formato: fila1;fila2;... donde fila=num1,num2,...):</label>
+                    <textarea id="matrixA" rows="3" placeholder="1,2,3;4,5,6;7,8,9"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="matrixB">Matriz B:</label>
+                    <textarea id="matrixB" rows="3" placeholder="1,0,0;0,1,0;0,0,1"></textarea>
+                </div>
+                <div class="button-group">
+                    <button id="matrixBruteBtn" class="algorithm-btn brute">Ejecutar Bloques</button>
+                    <button id="matrixEfficientBtn" class="algorithm-btn efficient">Ejecutar Strassen</button>
+                    <button id="matrixCompareBtn" class="compare-btn">Comparar</button>
+                    <button id="matrixLoadDemo" class="demo-btn">Cargar Demo</button>
+                    <div id="matrixStatus" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Resultados y Métricas</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>Bloques</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="matrixBruteTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Operaciones:</span>
+                            <span id="matrixBruteNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="matrixBruteResult">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Strassen</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="matrixEfficientTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Operaciones:</span>
+                            <span id="matrixEfficientNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="matrixEfficientResult">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>Visualización de Matrices</h4>
+                    <canvas id="matrixVisualization" width="400" height="300" aria-label="Visualización de las matrices y su multiplicación"></canvas>
+                    <h4>Comparación de Rendimiento</h4>
+                    <div class="charts-container">
+                        <div class="chart-item">
+                            <h5>Tiempo de Ejecución</h5>
+                            <canvas id="matrixChartTime" width="350" height="250" aria-label="Gráfico comparativo de tiempos de ejecución para multiplicación de matrices"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h5>Operaciones Realizadas</h5>
+                            <canvas id="matrixChartNodes" width="350" height="250" aria-label="Gráfico comparativo de operaciones realizadas para multiplicación de matrices"></canvas>
+                        </div>
+                    </div>
+                    <div id="matrixComment" class="comparison-comment"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h3>Código de Implementación</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="matrix-brute">Bloques</button>
+                    <button class="code-tab" data-tab="matrix-efficient">Strassen</button>
+                </div>
+                <div class="code-content">
+                    <div id="matrix-brute" class="code-block active">
+                        <div class="code-header">
+                            <span>Matrix - Bloques (Triple Bucle)</span>
+                            <button class="copy-btn" onclick="copyCode('matrix-brute-code')">Copiar</button>
+                        </div>
+                        <pre><code id="matrix-brute-code">function matrixMultiplyBrute(A, B) {
+    const rows = A.length;
+    const cols = B[0].length;
+    const inner = B.length;
+    const result = [];
+    let operations = 0;
+    
+    for (let i = 0; i < rows; i++) {
+        result[i] = [];
+        for (let j = 0; j < cols; j++) {
+            result[i][j] = 0;
+            for (let k = 0; k < inner; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+                operations++;
+            }
+        }
+    }
+    
+    result.operations = operations;
+    return result;
+}</code></pre>
+                    </div>
+                    <div id="matrix-efficient" class="code-block">
+                        <div class="code-header">
+                            <span>Matrix - Strassen (Divide y Vencerás)</span>
+                            <button class="copy-btn" onclick="copyCode('matrix-efficient-code')">Copiar</button>
+                        </div>
+                        <pre><code id="matrix-efficient-code">function matrixMultiplyEfficient(A, B) {
+    // Use Strassen's algorithm for matrices >= 4x4
+    const threshold = 4;
+    if (A.length < threshold || A[0].length < threshold || B[0].length < threshold) {
+        return matrixMultiplyBrute(A, B);
+    }
+    
+    return strassenMultiply(A, B);
+}
+
+function strassenMultiply(A, B) {
+    const n = A.length;
+    
+    // Base case: use naive for small matrices
+    if (n <= 2) {
+        return matrixMultiplyBrute(A, B);
+    }
+    
+    // Pad to next power of 2 and apply Strassen recursively
+    const nextPowerOf2 = Math.pow(2, Math.ceil(Math.log2(n)));
+    const paddedA = padMatrix(A, nextPowerOf2);
+    const paddedB = padMatrix(B, nextPowerOf2);
+    
+    const result = strassenRecursive(paddedA, paddedB);
+    
+    // Remove padding and return final result
+    const finalResult = [];
+    for (let i = 0; i < A.length; i++) {
+        finalResult[i] = [];
+        for (let j = 0; j < B[0].length; j++) {
+            finalResult[i][j] = result[i][j];
+        }
+    }
+    
+    finalResult.operations = Math.floor(7 * Math.pow(n, Math.log2(7)));
+    return finalResult;
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sudoku Page -->
+        <div id="sudokuPage" class="page">
+            <div class="problem-header">
+                <h2>Sudoku 9×9</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Información del Problema</h3>
+                <div class="info-content">
+                    <p><strong>Origen:</strong> Inspirado en cuadrados latinos (Euler, s. XVIII); popularizado como Sudoku en Japón (1986).</p>
+                    <p><strong>Objetivo:</strong> Completar una cuadrícula 9×9 con dígitos 1..9 sin repetir por fila, columna ni subcuadro.</p>
+                    <p><strong>Fuerza bruta (cómo se aborda):</strong> Backtracking: rellenar celdas vacías y retroceder si se viola una restricción.</p>
+                    <p><strong>Ejemplo:</strong> Entrada 9×9 con ceros ⇒ salida: tablero válido completo.</p>
+                    <p><strong>Complejidad:</strong> Tiempo exponencial; espacio O(1) extra (además del tablero).</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>Controles y Entrada</h3>
+                <div class="input-group">
+                    <label for="sudokuInput">Sudoku (9 filas × 9 columnas, 0 para vacío):</label>
+                    <textarea id="sudokuInput" rows="9" placeholder="530070000;600195000;098000060;800060003;400803001;700020006;060000280;000419005;000080079"></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="sudokuStrategy">Estrategia:</label>
+                    <select id="sudokuStrategy">
+                        <option value="simple">Simple (backtracking básico)</option>
+                        <option value="mrv">MRV (Minimum Remaining Values)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="sudokuSearchType">Tipo de búsqueda:</label>
+                    <select id="sudokuSearchType">
+                        <option value="dfs">DFS (Depth-First Search)</option>
+                        <option value="bfs">BFS (Breadth-First Search)</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button id="sudokuBruteBtn" class="algorithm-btn brute">Ejecutar Fuerza Bruta</button>
+                    <button id="sudokuEfficientBtn" class="algorithm-btn efficient">Ejecutar Eficiente</button>
+                    <button id="sudokuCompareBtn" class="compare-btn">Comparar</button>
+                    <button id="sudokuLoadDemo" class="demo-btn">Cargar Demo</button>
+                    <div id="sudokuStatus" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Resultados y Métricas</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>Fuerza Bruta</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="sudokuBruteTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Nodos:</span>
+                            <span id="sudokuBruteNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="sudokuBruteResult">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Eficiente</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="sudokuEfficientTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Nodos:</span>
+                            <span id="sudokuEfficientNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="sudokuEfficientResult">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="visualization-section">
+                    <h4>Visualización del Sudoku</h4>
+                    <div class="sudoku-container">
+                        <div class="sudoku-board">
+                            <h5>Antes</h5>
+                            <canvas id="sudokuBoardBefore" width="300" height="300" aria-label="Tablero de Sudoku inicial con pistas"></canvas>
+                        </div>
+                        <div class="sudoku-board">
+                            <h5>Después</h5>
+                            <canvas id="sudokuBoardAfter" width="300" height="300" aria-label="Tablero de Sudoku resuelto"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>Comparativa Visual</h4>
+                    <div class="charts-container">
+                        <div class="chart-item">
+                            <h5>Tiempo de Ejecución</h5>
+                            <canvas id="sudokuChartTime" width="350" height="250" aria-label="Gráfico comparativo de tiempos de ejecución para Sudoku"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h5>Nodos Explorados</h5>
+                            <canvas id="sudokuChartNodes" width="350" height="250" aria-label="Gráfico comparativo de nodos explorados para Sudoku"></canvas>
+                        </div>
+                    </div>
+                    <div id="sudokuComment" class="comparison-comment"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h3>Código de Implementación</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="sudoku-brute">Fuerza Bruta</button>
+                    <button class="code-tab" data-tab="sudoku-efficient">Eficiente (MRV)</button>
+                </div>
+                <div class="code-content">
+                    <div id="sudoku-brute" class="code-block active">
+                        <div class="code-header">
+                            <span>Sudoku - Fuerza Bruta (DFS/BFS)</span>
+                            <button class="copy-btn" onclick="copyCode('sudoku-brute-code')">Copiar</button>
+                        </div>
+                        <pre><code id="sudoku-brute-code">function sudokuBruteForce(board, strategy = 'simple', searchType = 'dfs') {
+    let steps = 0;
+    
+    if (searchType === 'bfs') {
+        // BFS implementation using queue
+        const queue = [JSON.parse(JSON.stringify(board))];
+        
+        while (queue.length > 0) {
+            steps++;
+            
+            // Check for cancellation every 1000 steps
+            if (steps % 1000 === 0) {
+                checkCancellation(steps, 'sudoku');
+            }
+            
+            const currentBoard = queue.shift();
+            
+            // Find first empty cell
+            let emptyRow = -1, emptyCol = -1;
+            for (let row = 0; row < 9 && emptyRow === -1; row++) {
+                for (let col = 0; col < 9; col++) {
+                    if (currentBoard[row][col] === 0) {
+                        emptyRow = row;
+                        emptyCol = col;
+                        break;
+                    }
+                }
+            }
+            
+            if (emptyRow === -1) {
+                // Board is complete
+                return {
+                    solution: currentBoard,
+                    steps: steps
+                };
+            }
+            
+            // Try numbers 1-9
+            for (let num = 1; num <= 9; num++) {
+                if (isValidMove(currentBoard, emptyRow, emptyCol, num)) {
+                    const newBoard = JSON.parse(JSON.stringify(currentBoard));
+                    newBoard[emptyRow][emptyCol] = num;
+                    queue.push(newBoard);
+                }
+            }
+        }
+        
+        return {
+            solution: null,
+            steps: steps
+        };
+    } else {
+        // DFS implementation (recursive)
+        function solve(board) {
+            steps++;
+            
+            // Check for cancellation every 1000 steps
+            if (steps % 1000 === 0) {
+                checkCancellation(steps, 'sudoku');
+            }
+            
+            // Find empty cell (simple strategy: first empty cell)
+            for (let row = 0; row < 9; row++) {
+                for (let col = 0; col < 9; col++) {
+                    if (board[row][col] === 0) {
+                        // Try numbers 1-9
+                        for (let num = 1; num <= 9; num++) {
+                            if (isValidMove(board, row, col, num)) {
+                                board[row][col] = num;
+                                
+                                if (solve(board)) {
+                                    return true;
+                                }
+                                
+                                board[row][col] = 0; // Backtrack
+                            }
+                        }
+                        return false;
+                    }
+                }
+            }
+            return true; // Board is complete
+        }
+        
+        const success = solve(board);
+        return {
+            solution: success ? board : null,
+            steps: steps
+        };
+    }
+}</code></pre>
+                    </div>
+                    <div id="sudoku-efficient" class="code-block">
+                        <div class="code-header">
+                            <span>Sudoku - Eficiente (MRV + Heurísticas)</span>
+                            <button class="copy-btn" onclick="copyCode('sudoku-efficient-code')">Copiar</button>
+                        </div>
+                        <pre><code id="sudoku-efficient-code">function sudokuEfficient(board, strategy = 'mrv', searchType = 'dfs') {
+    let steps = 0;
+    
+    function initializeDomains(board) {
+        const domains = Array(9).fill().map(() => Array(9).fill().map(() => new Set([1,2,3,4,5,6,7,8,9])));
+        
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (board[row][col] !== 0) {
+                    domains[row][col] = new Set();
+                    const num = board[row][col];
+                    
+                    // Remove from row
+                    for (let c = 0; c < 9; c++) {
+                        domains[row][c].delete(num);
+                    }
+                    
+                    // Remove from column
+                    for (let r = 0; r < 9; r++) {
+                        domains[r][col].delete(num);
+                    }
+                    
+                    // Remove from 3x3 box
+                    const boxRow = Math.floor(row / 3) * 3;
+                    const boxCol = Math.floor(col / 3) * 3;
+                    for (let r = boxRow; r < boxRow + 3; r++) {
+                        for (let c = boxCol; c < boxCol + 3; c++) {
+                            domains[r][c].delete(num);
+                        }
+                    }
+                }
+            }
+        }
+        return domains;
+    }
+    
+    function forwardCheck(domains, row, col, num) {
+        const removedValues = [];
+        
+        // Remove from row
+        for (let c = 0; c < 9; c++) {
+            if (c !== col && domains[row][c].has(num)) {
+                domains[row][c].delete(num);
+                removedValues.push({row, col: c, num});
+                if (domains[row][c].size === 0) {
+                    return {valid: false, removedValues};
+                }
+            }
+        }
+        
+        // Remove from column
+        for (let r = 0; r < 9; r++) {
+            if (r !== row && domains[r][col].has(num)) {
+                domains[r][col].delete(num);
+                removedValues.push({row: r, col, num});
+                if (domains[r][col].size === 0) {
+                    return {valid: false, removedValues};
+                }
+            }
+        }
+        
+        // Remove from 3x3 box
+        const boxRow = Math.floor(row / 3) * 3;
+        const boxCol = Math.floor(col / 3) * 3;
+        for (let r = boxRow; r < boxRow + 3; r++) {
+            for (let c = boxCol; c < boxCol + 3; c++) {
+                if ((r !== row || c !== col) && domains[r][c].has(num)) {
+                    domains[r][c].delete(num);
+                    removedValues.push({row: r, col: c, num});
+                    if (domains[r][c].size === 0) {
+                        return {valid: false, removedValues};
+                    }
+                }
+            }
+        }
+        
+        return {valid: true, removedValues};
+    }
+    
+    function restoreDomains(domains, removedValues) {
+        for (const {row, col, num} of removedValues) {
+            domains[row][col].add(num);
+        }
+    }
+    
+    function findBestCell(board, domains, strategy) {
+        let bestRow = -1, bestCol = -1;
+        let minOptions = 10;
+        
+        for (let row = 0; row < 9; row++) {
+            for (let col = 0; col < 9; col++) {
+                if (board[row][col] === 0) {
+                    const domainSize = domains[row][col].size;
+                    
+                    if (domainSize === 0) {
+                        return {row: -2, col: -2}; // No valid moves
+                    }
+                    
+                    if (strategy === 'mrv') {
+                        if (domainSize < minOptions) {
+                            minOptions = domainSize;
+                            bestRow = row;
+                            bestCol = col;
+                        }
+                    } else {
+                        return {row, col};
+                    }
+                }
+            }
+        }
+        return {row: bestRow, col: bestCol};
+    }
+    
+    const domains = initializeDomains(board);
+    
+    if (searchType === 'bfs') {
+        // BFS implementation with forward checking
+        const queue = [{board: JSON.parse(JSON.stringify(board)), domains: JSON.parse(JSON.stringify(domains))}];
+        
+        while (queue.length > 0) {
+            steps++;
+            
+            const {board: currentBoard, domains: currentDomains} = queue.shift();
+            const {row: bestRow, col: bestCol} = findBestCell(currentBoard, currentDomains, strategy);
+            
+            if (bestRow === -1) {
+                // Board is complete
+                return {
+                    solution: currentBoard,
+                    steps: steps
+                };
+            }
+            
+            if (bestRow === -2) {
+                // No valid moves (forward checking detected failure)
+                continue;
+            }
+            
+            // Try numbers for the selected cell
+            for (const num of currentDomains[bestRow][bestCol]) {
+                const newBoard = JSON.parse(JSON.stringify(currentBoard));
+                const newDomains = JSON.parse(JSON.stringify(currentDomains));
+                
+                newBoard[bestRow][bestCol] = num;
+                const forwardCheckResult = forwardCheck(newDomains, bestRow, bestCol, num);
+                
+                if (forwardCheckResult.valid) {
+                    queue.push({board: newBoard, domains: newDomains});
+                }
+            }
+        }
+        
+        return {
+            solution: null,
+            steps: steps
+        };
+    } else {
+        // DFS implementation with forward checking (recursive)
+        function solve(board, domains) {
+            steps++;
+            
+            const {row: bestRow, col: bestCol} = findBestCell(board, domains, strategy);
+            
+            if (bestRow === -1) return true; // Board is complete
+            if (bestRow === -2) return false; // No valid moves
+            
+            // Try numbers for the selected cell using domain values
+            for (const num of [...domains[bestRow][bestCol]]) {
+                board[bestRow][bestCol] = num;
+                
+                // Apply forward checking
+                const forwardCheckResult = forwardCheck(domains, bestRow, bestCol, num);
+                
+                if (forwardCheckResult.valid) {
+                    if (solve(board, domains)) {
+                        return true;
+                    }
+                }
+                
+                // Backtrack: restore board and domains
+                board[bestRow][bestCol] = 0;
+                restoreDomains(domains, forwardCheckResult.removedValues);
+            }
+            return false;
+        }
+        
+        const success = solve(board, domains);
+        return {
+            solution: success ? board : null,
+            steps: steps
+        };
+    }
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cryptogram Page -->
+        <div id="cryptogramPage" class="page">
+            <div class="problem-header">
+                <h2>Criptograma (SEND + MORE = MONEY)</h2>
+            </div>
+            
+            <div class="info-section">
+                <h3>Información del Problema</h3>
+                <div class="info-content">
+                    <p><strong>Origen:</strong> Popularizado en pasatiempos y por matemáticos recreativos del s. XX.</p>
+                    <p><strong>Objetivo:</strong> Mapear letras→dígitos para que la suma en columna sea correcta (sin ceros a la izquierda).</p>
+                    <p><strong>Fuerza bruta (cómo se aborda):</strong> Probar todas las permutaciones de dígitos para las letras distintas.</p>
+                    <p><strong>Ejemplo:</strong> Solución: 9567 + 1085 = 10652.</p>
+                    <p><strong>Complejidad:</strong> Aproximadamente O(n!) en tiempo; espacio O(1) extra.</p>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <h3>Controles y Entrada</h3>
+                <div class="input-group">
+                    <label>Problema fijo: SEND + MORE = MONEY</label>
+                    <div class="cryptogram-display">
+                        <div class="crypto-line">  S E N D</div>
+                        <div class="crypto-line">+ M O R E</div>
+                        <div class="crypto-line">-------</div>
+                        <div class="crypto-line">M O N E Y</div>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button id="cryptogramBruteBtn" class="algorithm-btn brute">Ejecutar Fuerza Bruta</button>
+                    <button id="cryptogramEfficientBtn" class="algorithm-btn efficient">Ejecutar Eficiente</button>
+                    <button id="cryptogramCompareBtn" class="compare-btn">Comparar</button>
+                    <div id="cryptogramStatus" class="status-message"></div>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <h3>Resultados y Métricas</h3>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <h4>Fuerza Bruta</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="cryptogramBruteTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Intentos:</span>
+                            <span id="cryptogramBruteNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="cryptogramBruteResult">-</span>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <h4>Eficiente</h4>
+                        <div class="metric-item">
+                            <span>Tiempo:</span>
+                            <span id="cryptogramEfficientTime">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Intentos:</span>
+                            <span id="cryptogramEfficientNodes">-</span>
+                        </div>
+                        <div class="metric-item">
+                            <span>Resultado:</span>
+                            <span id="cryptogramEfficientResult">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="comparison-section">
+                    <h4>Visualización del Criptograma</h4>
+                    <canvas id="cryptogramVisualization" width="400" height="300" aria-label="Visualización del criptograma y su solución"></canvas>
+                    <h4>Comparación de Rendimiento</h4>
+                    <div class="charts-container">
+                        <div class="chart-item">
+                            <h5>Tiempo de Ejecución</h5>
+                            <canvas id="cryptogramChartTime" width="350" height="250" aria-label="Gráfico comparativo de tiempos de ejecución para Cryptogram"></canvas>
+                        </div>
+                        <div class="chart-item">
+                            <h5>Intentos Realizados</h5>
+                            <canvas id="cryptogramChartNodes" width="350" height="250" aria-label="Gráfico comparativo de intentos realizados para Cryptogram"></canvas>
+                        </div>
+                    </div>
+                    <div id="cryptogramComment" class="comparison-comment"></div>
+                </div>
+            </div>
+
+            <div class="code-section">
+                <h3>Código de Implementación</h3>
+                <div class="code-tabs">
+                    <button class="code-tab active" data-tab="cryptogram-brute">Fuerza Bruta</button>
+                    <button class="code-tab" data-tab="cryptogram-efficient">Eficiente (Backtracking)</button>
+                </div>
+                <div class="code-content">
+                    <div id="cryptogram-brute" class="code-block active">
+                        <div class="code-header">
+                            <span>Cryptogram - Fuerza Bruta (Todas las Permutaciones)</span>
+                            <button class="copy-btn" onclick="copyCode('cryptogram-brute-code')">Copiar</button>
+                        </div>
+                        <pre><code id="cryptogram-brute-code">function cryptogramBruteForce() {
+    // SEND + MORE = MONEY
+    // Backtracking by letters (more efficient than nested loops)
+    let attempts = 0;
+    const letters = ['S', 'E', 'N', 'D', 'M', 'O', 'R', 'Y'];
+    const assignment = {};
+    const used = new Set();
+    
+    function isValidAssignment() {
+        const { S, E, N, D, M, O, R, Y } = assignment;
+        
+        // S and M cannot be 0 (leading digits)
+        if (S === 0 || M === 0) return false;
+        
+        const send = S * 1000 + E * 100 + N * 10 + D;
+        const more = M * 1000 + O * 100 + R * 10 + E;
+        const money = M * 10000 + O * 1000 + N * 100 + E * 10 + Y;
+        
+        return send + more === money;
+    }
+    
+    function backtrack(letterIndex) {
+        attempts++;
+        
+        // Check for cancellation every 1000 attempts
+        if (attempts % 1000 === 0) {
+            checkCancellation(attempts, 'cryptogram');
+        }
+        
+        if (letterIndex === letters.length) {
+            // All letters assigned, check if valid
+            if (isValidAssignment()) {
+                return { S: assignment.S, E: assignment.E, N: assignment.N, D: assignment.D, 
+                        M: assignment.M, O: assignment.O, R: assignment.R, Y: assignment.Y };
+            }
+            return null;
+        }
+        
+        const letter = letters[letterIndex];
+        const startDigit = (letter === 'S' || letter === 'M') ? 1 : 0; // S and M cannot be 0
+        
+        for (let digit = startDigit; digit <= 9; digit++) {
+            if (!used.has(digit)) {
+                assignment[letter] = digit;
+                used.add(digit);
+                
+                const result = backtrack(letterIndex + 1);
+                if (result) {
+                    return result;
+                }
+                
+                delete assignment[letter];
+                used.delete(digit);
+            }
+        }
+        
+        return null;
+    }
+    
+    const solution = backtrack(0);
+    return { solution: solution, attempts: attempts };
+}</code></pre>
+                    </div>
+                    <div id="cryptogram-efficient" class="code-block">
+                        <div class="code-header">
+                            <span>Cryptogram - Eficiente (Backtracking por Columnas)</span>
+                            <button class="copy-btn" onclick="copyCode('cryptogram-efficient-code')">Copiar</button>
+                        </div>
+                        <pre><code id="cryptogram-efficient-code">function cryptogramEfficient() {
+    // Backtracking by columns (right to left) with carry and local consistency
+    let attempts = 0;
+    const maxAttempts = 100000;
+    
+    // Variables: S, E, N, D, M, O, R, Y
+    const assignment = {};
+    const used = new Set();
+    
+    function isValid(assignment) {
+        // Check if current assignment satisfies constraints
+        const { S, E, N, D, M, O, R, Y } = assignment;
+        
+        // S and M cannot be 0 (leading digits)
+        if (S === 0 || M === 0) return false;
+        
+        // Check if we have enough variables assigned to validate
+        if (D !== undefined && E !== undefined && Y !== undefined) {
+            // Units column: D + E = Y (mod 10)
+            const carry1 = Math.floor((D + E) / 10);
+            if ((D + E) % 10 !== Y) return false;
+            
+            if (N !== undefined && R !== undefined) {
+                // Tens column: N + R + carry1 = E (mod 10)
+                const carry2 = Math.floor((N + R + carry1) / 10);
+                if ((N + R + carry1) % 10 !== E) return false;
+                
+                if (E !== undefined && O !== undefined) {
+                    // Hundreds column: E + O + carry2 = N (mod 10)
+                    const carry3 = Math.floor((E + O + carry2) / 10);
+                    if ((E + O + carry2) % 10 !== N) return false;
+                    
+                    if (S !== undefined && M !== undefined) {
+                        // Thousands column: S + M + carry3 = O (mod 10)
+                        const carry4 = Math.floor((S + M + carry3) / 10);
+                        if ((S + M + carry3) % 10 !== O) return false;
+                        
+                        // Ten thousands column: carry4 = M
+                        if (carry4 !== M) return false;
+                    }
+                }
+            }
+        }
+        
+        return true;
+    }
+    
+    function solve(variables, index) {
+        attempts++;
+        if (attempts > maxAttempts) return null;
+        
+        if (index === variables.length) {
+            return isValid(assignment) ? { ...assignment } : null;
+        }
+        
+        const variable = variables[index];
+        const startDigit = (variable === 'S' || variable === 'M') ? 1 : 0;
+        
+        for (let digit = startDigit; digit <= 9; digit++) {
+            if (!used.has(digit)) {
+                assignment[variable] = digit;
+                used.add(digit);
+                
+                if (isValid(assignment)) {
+                    const result = solve(variables, index + 1);
+                    if (result) return result;
+                }
+                
+                delete assignment[variable];
+                used.delete(digit);
+            }
+        }
+        
+        return null;
+    }
+    
+    // Order variables for better pruning: start with most constrained
+    const variables = ['D', 'E', 'Y', 'N', 'R', 'O', 'S', 'M'];
+    const solution = solve(variables, 0);
+    
+    return { solution: solution, attempts: attempts };
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

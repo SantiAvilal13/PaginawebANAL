@@ -1,0 +1,320 @@
+1) Portada y navegación
+1.1 Pantalla de inicio (Home)
+
+Título de bienvenida (obligatorio):
+“Bienvenido a la página de los problemas de Santiago Avila y David Piñeros”.
+
+Seis tarjetas (cards), una por problema: TSP, N‑Reinas, Colisión de Hash, Multiplicación de Matrices, Sudoku 9×9, Criptograma.
+
+Cada tarjeta muestra: nombre del problema, breve lead (1 línea), botón “Abrir”.
+
+Al pulsar Abrir:
+
+Se navega a la vista del problema.
+
+Se carga el demo por defecto.
+
+Se ejecuta la Comparativa (Fuerza bruta vs Eficiente) automáticamente para mostrar resultados inmediatos.
+
+1.2 Estructura de pantalla por problema
+
+Cada problema presenta, en este orden:
+
+Bloque informativo (texto): Origen, Objetivo, Cómo se aborda con fuerza bruta, Complejidad.
+
+Controles + entrada demo: campos/áreas para pegar entrada o usar el demo; botones Ejecutar (Fuerza bruta), Ejecutar (Eficiente) y Comparar.
+
+Selector de estrategia BFS/DFS en los problemas que aplican (N‑Reinas, Sudoku; opcional Criptograma).
+
+Salidas y KPIs (métricas): Tiempo (ms), Nodos/Intentos (si aplica), Resultado/solución.
+
+Comparativa visual:
+
+Cuadro lado a lado de Fuerza bruta vs Eficiente.
+
+Mini‑gráfico de barras (sin librerías externas) para comparar Tiempo y Nodos.
+
+Comentario automático que interprete la comparativa (p. ej., “Backtracking exploró 85% menos nodos que fuerza bruta”).
+
+Visualización específica (cuando aplique):
+
+N‑Reinas: tablero con ♛ y lista de coordenadas (fila, col) de una solución mostrada.
+
+Sudoku: tablero 9×9 antes (con 0 o · para vacíos) y después (resuelto).
+
+2) Requisitos funcionales globales
+
+Demos precargados por problema (ver §5).
+
+Métricas comunes:
+
+Tiempo (ms): medido con performance.now().
+
+Nodos/Intentos: contador de expansiones/estados (no aplica a matrices naive → mostrar “—”).
+
+Límites y validaciones:
+
+TSP fuerza bruta n ≤ 9 (alerta y bloqueo si excede).
+
+Matrices: validar compatibilidad de dimensiones.
+
+Sudoku: validar formato 9×9 con enteros 0..9.
+
+Hash: m ≥ 2 y límite de intentos ≥ 1.
+
+Accesibilidad y UX: alto contraste, botones grandes, mensajes de error claros, diseño responsive.
+
+Sin dependencias externas (todo HTML/CSS/JS).
+
+Comparativa: botón “Comparar” ejecuta ambos métodos con la misma entrada y rellena tabla + gráfico + comentario.
+
+3) Selector de Anchura (BFS) vs Profundidad (DFS)
+
+N‑Reinas y Sudoku: incluir select BFS/DFS:
+
+DFS (búsqueda en profundidad/backtracking): menor uso de memoria; suele llegar antes a soluciones profundas.
+
+BFS (búsqueda en anchura): orden por niveles; útil para ver el “abanico” de estados, pero consume más memoria.
+
+Impacto en comparativa: el número de nodos y el tiempo deben reflejar el cambio al alternar BFS/DFS (nota interpretativa automática).
+
+4) Contenidos informativos (listos para pegar)
+
+Los siguientes bloques están redactados para que los copies tal cual a la sección “Información” de cada problema. Indico las referencias a tu documento.
+
+4.1 TSP – Viajante de Comercio
+
+Origen. Formulado en el siglo XIX y popularizado por matemáticos como Karl Menger; ampliamente estudiado en investigación operativa en el s. XX.
+Objetivo. Encontrar la ruta más corta que visita todas las ciudades exactamente una vez y regresa a la de origen.
+Fuerza bruta (cómo se aborda). Fijar una ciudad origen y evaluar todas las permutaciones de las restantes; calcular la distancia total y tomar la mínima.
+Ejemplo. coords=[(0,0),(1,0),(1,1),(0,1)] ⇒ ruta óptima (0,1,2,3,0), longitud 4.0.
+Complejidad. Tiempo O(n!), espacio O(n).
+
+4.2 N‑Reinas
+
+Origen. Propuesto por Max Bezzel en 1848 como el problema de las 8 reinas; generalizado a N.
+Objetivo. Colocar N reinas en un tablero N×N sin que se ataquen (filas, columnas, diagonales).
+Fuerza bruta (cómo se aborda). Backtracking colocando una reina por fila y verificando conflictos antes de avanzar.
+Ejemplo. N=4 ⇒ [1,3,0,2] y [2,0,3,1].
+Complejidad. Exponencial en tiempo; espacio O(N).
+
+4.3 Colisión de Hash (h(x)=x mod m)
+
+Origen. Teoría de funciones hash en criptografía y EDD, desde mediados del siglo XX.
+Objetivo. Encontrar dos entradas distintas con el mismo hash.
+Fuerza bruta (cómo se aborda). Probar entradas secuenciales y guardar hashes hasta detectar el primer choque.
+Ejemplo. límite=50, hash(x)=x mod 10 ⇒ colisión 7 y 17.
+Complejidad. Tiempo O(k), espacio O(k) en el enfoque secuencial guardando vistos.
+
+4.4 Multiplicación de matrices (naive)
+
+Origen. Método clásico formalizado en el álgebra lineal del s. XIX.
+Objetivo. Calcular C=A·B.
+Fuerza bruta (cómo se aborda). Triple bucle para cada celda de C, acumulando productos A[i,k]·B[k,j].
+Ejemplo. A=[[1,2],[3,4]], B=[[2,0],[1,2]] ⇒ C=[[4,4],[10,8]].
+Complejidad. Tiempo O(n³), espacio O(1) extra.
+
+4.5 Sudoku 9×9
+
+Origen. Inspirado en cuadrados latinos (Euler, s. XVIII); popularizado como Sudoku en Japón (1986).
+Objetivo. Completar una cuadrícula 9×9 con dígitos 1..9 sin repetir por fila, columna ni subcuadro.
+Fuerza bruta (cómo se aborda). Backtracking: rellenar celdas vacías y retroceder si se viola una restricción.
+Ejemplo. Entrada 9×9 con ceros ⇒ salida: tablero válido completo.
+Complejidad. Tiempo exponencial; espacio O(1) extra (además del tablero).
+
+4.6 Criptograma (SEND+MORE=MONEY)
+
+Origen. Popularizado en pasatiempos y por matemáticos recreativos del s. XX.
+Objetivo. Mapear letras→dígitos para que la suma en columna sea correcta (sin ceros a la izquierda).
+Fuerza bruta (cómo se aborda). Probar todas las permutaciones de dígitos para las letras distintas.
+Ejemplo. Solución: 9567 + 1085 = 10652.
+Complejidad. Aproximadamente O(n!) en tiempo; espacio O(1) extra.
+
+5) Demos precargados (entradas de ejemplo)
+
+TSP: 5 ciudades (cuadrado + 1 punto extra) para que la fuerza bruta sea visible y la heurística NN compare. (Basado en el ejemplo de 4 ciudades del doc.)
+
+N‑Reinas: N=8 (y botón rápido para N=4).
+
+Hash: m=97, límite=200 (colisión esperada rápido; el doc usa mod 10 como ejemplo conceptual).
+
+Matrices: A(3×3), B(3×3) con números pequeños (doc muestra 2×2 como ejemplo).
+
+Sudoku: rejilla 9×9 de dificultad media con 0=vacío (doc indica formato con ceros).
+
+Criptograma: SEND+MORE=MONEY (el clásico del doc).
+
+6) Visualizaciones requeridas
+6.1 N‑Reinas (tablero y coordenadas)
+
+Tablero N×N dibujado en un <canvas> o con <div>s en grilla (sin librerías).
+
+Colocar un símbolo ♛ (o SVG) en cada (fila, col) de una solución seleccionada.
+
+Debajo, listar coordenadas en formato: (fila, col) 0‑indexadas o 1‑indexadas (elige y sé consistente).
+
+Añadir botón “Siguiente solución” para rotar entre las primeras K soluciones.
+
+6.2 Sudoku (rejilla 9×9)
+
+Grilla 9×9 con líneas más gruesas para subcuadros 3×3.
+
+Antes de resolver: mostrar 0 como · (punto medio) para distinguir vacíos.
+
+Después de resolver: reemplazar cada · por el número asignado; resaltar en color los cambios.
+
+Si no hay solución: mostrar mensaje claro y no fechar métricas inválidas.
+
+6.3 Mini‑gráfico para la comparativa
+
+Dos barras por métrica (Tiempo, Nodos): Bruta vs Eficiente.
+
+Escala automática (máximo entre ambos + margen).
+
+Leyenda y valores numéricos encima de cada barra.
+
+Sin librerías externas (canvas o barras CSS).
+
+7) Algoritmos a implementar (parejas “Fuerza bruta” / “Eficiente”)
+
+TSP:
+
+Bruta: permutaciones con ciudad fija.
+
+Eficiente: Nearest Neighbor (heurística).
+
+N‑Reinas:
+
+Bruta: backtracking directo (como en doc).
+
+Eficiente: backtracking con poda agresiva + orden de columnas; selector BFS/DFS para expansión.
+
+Hash (x mod m):
+
+Bruta: secuencial guardando vistos (doc).
+
+Eficiente: aleatorio (efecto cumpleaños) con detección temprana.
+
+Matrices:
+
+Bruta: triple bucle (doc).
+
+Eficiente: Strassen con padding a potencias de 2.
+
+Sudoku:
+
+Bruta: backtracking simple (doc).
+
+Eficiente: backtracking con MRV (elige celda con menos candidatos) + forward checking; selector BFS/DFS opcional.
+
+Criptograma:
+
+Bruta: permutaciones de dígitos (doc).
+
+Eficiente: backtracking por columnas con acarreos (consistencia local).
+
+8) Métricas y complejidad
+
+Tiempo (ms): capturar inicio/fin de cada método.
+
+Nodos/Intentos:
+
+TSP: número de permutaciones evaluadas.
+
+N‑Reinas/Sudoku/Cripto: número de llamadas recursivas/estados expandidos.
+
+Hash: conteo de pruebas hasta colisión.
+
+Matrices: “—”.
+
+Complejidad teórica (mostrar junto al texto informativo):
+
+TSP: O(n!) tiempo; O(n) espacio.
+
+N‑Reinas: exponencial; O(N) espacio.
+
+Hash (secuencial): O(k) tiempo y espacio.
+
+Matrices naive: O(n³) tiempo, O(1) extra.
+
+Sudoku: exponencial; O(1) extra.
+
+Criptograma: ~O(n!) tiempo; O(1) extra.
+
+9) Diseño de interfaz (UI/UX)
+
+Consistencia visual: tipografía, espaciados, paleta con estados (éxito/advertencia/error).
+
+Estados vacíos: mensajes “Cargue o edite los datos y presione Ejecutar”.
+
+Accesibilidad: contraste AA, foco visible en inputs/botones.
+
+Responsive: columnas apiladas en móvil; lienzos de tablero re‑pintan al redimensionar.
+
+Protecciones: cortar búsqueda si excede X nodos o Y segundos en bruta; mostrar aviso y detener.
+
+10) Validaciones clave (por problema)
+
+TSP: si n>9 en bruta → bloquear y sugerir heurística; si hay coordenadas inválidas, mensaje claro.
+
+N‑Reinas: N ≥ 4, entero; manejar N grandes solo en eficiente.
+
+Hash: m ≥ 2; límite de intentos obligatorio.
+
+Matrices: validar A(n×p) y B(p×m); si no, alerta.
+
+Sudoku: 9 filas × 9 columnas; números 0..9; rechazar caracteres no válidos.
+
+Criptograma: letras únicas y restricciones de no‑cero en cabeceras.
+
+11) Flujo de uso esperado
+
+Home → click en problema.
+
+Vista del problema → se cargan demo + comparativa.
+
+Usuario puede editar entrada y elegir BFS/DFS (si aplica).
+
+Click Comparar → tabla + gráfico + comentario.
+
+En N‑Reinas/Sudoku → ver tablero y (en reinas) coordenadas.
+
+Volver a Home con botón Inicio.
+
+12) Pruebas y criterios de aceptación
+
+Smoke tests
+
+Abrir cada problema desde Home; ver comparativa automática sin errores.
+
+Casos funcionales
+
+Cambiar entradas y re‑comparar; métricas actualizan.
+
+Conmutar BFS/DFS en N‑Reinas/Sudoku; nodos cambian.
+
+Visual de tableros: reinas correctas en casillas; Sudoku válido.
+
+Errores controlados (p. ej., matrices incompatibles) con mensajes claros.
+
+Criterios de aceptación
+
+Cada problema muestra Origen, Objetivo, Fuerza bruta, Complejidad, Código (dos bloques), Ejemplo, Comparativa con gráfico y Comentario. (Texto conforme al documento.)
+
+Tableros en N‑Reinas y Sudoku.
+
+Selector BFS/DFS en N‑Reinas y Sudoku.
+
+Demos precargados y autocomparativa al abrir.
+
+Validaciones y límites implementados.
+
+13) Mejoras sugeridas (opcionales)
+
+Botón “Exportar resultados (CSV)” con métricas (tiempo, nodos, tamaño de entrada).
+
+“Benchmark automático”: barrer N=4..12 (reinas), tamaños 2..8 (matrices) y graficar.
+
+Captura PNG de la comparativa (canvas) para anexos.
+
+Modo “explicado”: al ejecutar, resaltar en texto los pasos clave (p. ej., elección MRV en Sudoku).
